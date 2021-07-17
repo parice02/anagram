@@ -14,3 +14,7 @@ python3 anagram.py
 ```
 python setup.py build
 ```
+
+# Author
+
+Muhammed Zeba
