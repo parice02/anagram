@@ -1,41 +1,44 @@
 # -*- coding: utf-8 -*-
- 
-import sys, os
+
+'''
+@author: Muhammed Zeba (parice02)
+'''
+
+import sys
+import os
 from pathlib import Path
 from cx_Freeze import setup, Executable
 from datetime import date
 
-python_env_dir = Path.cwd() / 'env' # repertoire où est  installé python
-tcl_lib = python_env_dir / "tcl" / 'tcl8.6' # Récupération du packages tcl nécessaire le GUI
-tkl_lib = python_env_dir / 'tcl' / 'tk8.6' # Récupération du packages tk nécessaire le GUI
+python_env_dir = Path.cwd() / 'env'  # repertoire où est  installé python
+# Récupération du packages tcl nécessaire le GUI
+tcl_lib = python_env_dir / "tcl" / 'tcl8.6'
+# Récupération du packages tk nécessaire le GUI
+tkl_lib = python_env_dir / 'tcl' / 'tk8.6'
 
 os.environ['TCL_LIBRARY'] = tcl_lib.as_posix()
 os.environ['TK_LIBRARY'] = tkl_lib.as_posix()
 
 
- 
-### OPTIONS PREPARATION
-
+# OPTIONS PREPARATION
 
 
 path = sys.path.append(python_env_dir)    # os.path.dirname(sys.executable)
 includes = ['outils']  # inclusion de modules créés sois-même
-excludes = [] # exclusion de modules créés sois-même
-packages = [] # inclusion de packages créés sois-même
-include_files = ['ana.db'] # inclusion de fichiers essentiels
+excludes = []  # exclusion de modules créés sois-même
+packages = []  # inclusion de packages créés sois-même
+include_files = ['ana.db']  # inclusion de fichiers essentiels
 options = {}
 
- 
 
-### TARGET PREPARATION
-
+# TARGET PREPARATION
 
 
 base = None
 tcl86_dll = None
-tk86_dll=None
+tk86_dll = None
 binpathincludes = None
-if sys.platform == "win32":# and $$WINCONS$$:
+if sys.platform == "win32":  # and $$WINCONS$$:
     base = "Win32GUI"
     options["include_msvcr"] = True
     tk86_dll = python_env_dir / 'DLLs' / 'tk86t.dll'
@@ -43,49 +46,48 @@ if sys.platform == "win32":# and $$WINCONS$$:
     include_files.append(tcl86_dll)
     include_files.append(tk86_dll)
 elif sys.platform == "linux2":
-	binpathincludes = ["/usr/lib"]
-	options['bin_path_includes'] = binpathincludes 
-	pass
+    binpathincludes = ["/usr/lib"]
+    options['bin_path_includes'] = binpathincludes
+    pass
 else:
-	pass
+    pass
 
 app = Executable(
     "anagram.py",
-    base = base,
+    base=base,
     copyright=f"Copyright (c) {date.year}",
-    icon = "favicon.ico"
-    )
- 
+    icon="favicon.ico"
+)
+
 options['path'] = path
 options['includes'] = includes
 options['excludes'] = excludes
 options['packages'] = packages
 options['optimize'] = 2
 options['include_files'] = include_files
-#options['create_shared_zip'] = False # Non reconnu sous cx_Freeze 5.1.1
-#options['append_script_to_exe'] = True  # Non reconnu sous cx_Freeze 5.1.1
-#options['include_in_shared_zip'] = False  # Non reconnu sous cx_Freeze 5.1.1
-
- 
-
-### SETUP PREPARATION
+# options['create_shared_zip'] = False # Non reconnu sous cx_Freeze 5.1.1
+# options['append_script_to_exe'] = True  # Non reconnu sous cx_Freeze 5.1.1
+# options['include_in_shared_zip'] = False  # Non reconnu sous cx_Freeze 5.1.1
 
 
+# SETUP PREPARATION
 
-long_description = str("Application permettant de retrouver l'ensembles anagrammes d'un ensemble de lettres saisies.")
+
+long_description = str(
+    "Application permettant de retrouver l'ensembles anagrammes d'un ensemble de lettres saisies.")
 
 setup(
-    name = "MyAnagram",
-    version = "0.0.1",
-    description = "application pour trouver des anagrammes",
-    long_description = long_description,
-    author = "parice02",
-    author_email = "parice02@hotmail.com",
-    maintainer = "parice02",
-    maintainer_email = "parice02@hotmail.com",
-    download_url = '',
-    license = 'Libre & Gratuit',
-    url = "",
-    options = {"build_exe": options},
-    executables = [app]
-    )
+    name="MyAnagram",
+    version="0.0.1",
+    description="application pour trouver des anagrammes",
+    long_description=long_description,
+    author="parice02",
+    author_email="parice02@hotmail.com",
+    maintainer="parice02",
+    maintainer_email="parice02@hotmail.com",
+    download_url='',
+    license='Libre & Gratuit',
+    url="",
+    options={"build_exe": options},
+    executables=[app]
+)

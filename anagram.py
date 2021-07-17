@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 '''
-@author: parice02
+@author: Muhammed Zeba (parice02)
 '''
 import tkinter
 import sqlite3

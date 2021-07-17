@@ -1,8 +1,6 @@
 # -*- coding:utf-8 -*-
 '''
-Created on 2 avr. 2018
-
-@author: parice02
+@author: Muhammed Zeba (parice02)
 '''
 
 from typing import List
