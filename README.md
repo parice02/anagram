@@ -1,5 +1,8 @@
 ## anagram
 
+Anagram with french word.
+336527 words in the database.
+
 # Execution
 
 ```
