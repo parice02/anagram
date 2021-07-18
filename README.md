@@ -1,12 +1,12 @@
 ## anagram
 
-Anagram with french word.
+Anagram with french words.
 336527 words in the database.
 
 # Execution
 
 ```
-python3 anagram.py
+python3 tk_ui.py
 ```
 
 # Build executable with cx_freeze

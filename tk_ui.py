@@ -5,26 +5,27 @@
 '''
 import tkinter
 import sqlite3
-from tkinter import font
+from tkinter import font, messagebox
 from typing import List
 from collections import Counter
+import gettext
 
 from anagram import Anagram
 
+LANG = {'en': 'English', 'fr': 'Français'}
 HEIGHT, WIDTH = 500, 400
-LANG = {"fr": 'Français', 'en': 'English'}
+
+en = gettext.translation(
+    'anagramUI', localedir='locales', languages=['en'], fallback=True)
+en.install()
 
 
 class AnagramUI (object):
     """
-    Anagram - Classe principale.
-    Elle gère tout le graphisme, la saisie et l'affiche des mots trouvés et des erreurs.
     """
 
     def __init__(self):
         """
-        Constructeur de classe
-        Cré la fenêtre
         """
         self.__letters_dict = {}
         self.__word_length = 0
@@ -37,8 +38,8 @@ class AnagramUI (object):
         # self.__window.tk.call('tk', 'windowingsystem')
         self.__window.option_add('*tearOff', tkinter.FALSE)
         self.__window.resizable(False, False)
-        self.__window.title("Anagramme")
-        self.__window.wm_title("Anagramme")
+        self.__window.title(_("Anagramme"))
+        self.__window.wm_title(_("Anagramme"))
         self.__window.minsize(HEIGHT, WIDTH)
         self.__window.protocol('WM_DELETE_WINDOW', self.__window.destroy)
         self.__window.iconphoto(True, tkinter.PhotoImage(
@@ -51,9 +52,9 @@ class AnagramUI (object):
         self.__window['menu'] = self.__menubar
         self.__menuedit = tkinter.Menu(self.__menubar)
         self.__menuquit = tkinter.Menu(self.__menubar)
-        self.__menubar.add_cascade(menu=self.__menuedit, label='Édition')
+        self.__menubar.add_cascade(menu=self.__menuedit, label=_('Édition'))
         self.__menubar.add_separator()
-        self.__menubar.add_command(command=self.exit, label='Quitter')
+        self.__menubar.add_command(command=self.exit, label=_('Quitter'))
 
         self.__menulang = tkinter.Menu(self.__menuedit)
         for k, l in LANG.items():
@@ -61,41 +62,41 @@ class AnagramUI (object):
                 label=l, variable=None, value=k,
                 state=tkinter.DISABLED if k == 'en' else tkinter.ACTIVE)
         self.__menuedit.add_cascade(
-            label='Langue', menu=self.__menulang)
+            label=_('Langue'), menu=self.__menulang)
         self.__menuedit.add_separator()
         self.__menuedit.add_command(
-            label='À propos de', command=self.__information)
+            label=_('À propos de'), command=self.__information)
         self.__menuedit.add_separator()
-        self.__menuedit.add_command(label='Aide', command=None)
+        self.__menuedit.add_command(label=_('Aide'), command=None)
 
         self.__frame0 = tkinter.Frame(
             self.__window, width=WIDTH, height=100, bg='lightblue')
         self.__frame0.pack(side=tkinter.TOP, expand=True, fill=tkinter.BOTH)
 
-        tkinter.Label(self.__frame0, text="Entrer les lettres et le nombre de lettres souhaités",
+        tkinter.Label(self.__frame0, text=_("Entrer les lettres et le nombre de lettres souhaités"),
                       bg='lightblue', font=self.highlightFont).grid(row=0, column=0, columnspan=4, pady=10)
-        tkinter.Label(self.__frame0, text="Lettres: ",
+        tkinter.Label(self.__frame0, text=_("Lettres: "),
                       bg='lightblue').grid(row=1, column=0, padx=10)
         self.__champText = tkinter.Entry(self.__frame0, width=30)
         self.__champText.focus_set()
         self.__champText.grid(row=1, column=1, padx=10)
 
-        tkinter.Label(self.__frame0, text="Nombre de lettres: ",
+        tkinter.Label(self.__frame0, text=_("Nombre de lettres: "),
                       bg='lightblue').grid(row=1, column=2, padx=10)
         self.__nombre = tkinter.Entry(self.__frame0, width=8)
         self.__nombre.grid(row=1, column=3, padx=10)
 
         self.__bouton = tkinter.Button(
-            self.__frame0, text='OK', command=self.search, width=5)
+            self.__frame0, text=_('OK'), command=self.search, width=5)
         self.__bouton.grid(row=1, column=4)
 
         self.__label = tkinter.Label(self.__frame0, fg='red', bg='lightblue')
         self.__label.grid(row=2, columnspan=5, pady=5)
 
-        self.__frame = tkinter.Frame(self.__window, width=WIDTH, height=300,)
+        self.__frame = tkinter.Frame(self.__window, width=WIDTH, height=400,)
         self.__frame.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=True)
 
-        self.__caneva = tkinter.Canvas(self.__frame, width=WIDTH, height=300, bg='white',
+        self.__caneva = tkinter.Canvas(self.__frame, width=WIDTH, height=400, bg='white',
                                        scrollregion=(0, 0, 0, 0))
 
         self.__scrolV = tkinter.Scrollbar(
@@ -120,15 +121,15 @@ class AnagramUI (object):
 
     def exit(self, event=None):
         """
-        Méthode exécuté lorsqu'on quitte la programme
+        Exit from the program
         """
         self.__anagram.close_connection()
         self.__window.quit()
 
     def search(self, event=None):
         """
-        Check the input and launch search in the database.
-                """
+        Checks the input and launches search in the database.
+        """
         self.clear_content()
         try:
             self.__word_length = int(self.__nombre.get())
@@ -136,7 +137,7 @@ class AnagramUI (object):
                 if self.check_input(event):
                     if (self.__word_length > len(self.__champText.get())):
                         self.__label.configure(
-                            text="Le nombre doit être au plus égal au nombre de lettres.".upper())
+                            text=_("Le nombre doit être au plus égal au nombre de lettres."))
                     else:
                         self.__letters_dict = dict(Counter(
                             str(self.__champText.get()).lower()).most_common())
@@ -148,9 +149,9 @@ class AnagramUI (object):
                             self.display_content(liste)
             else:
                 self.__label.configure(
-                    text='Veuillez saisir un entier positif svp!!'.upper())
+                    text=_('Veuillez saisir un entier positif svp!!'))
         except Exception as e:
-            self.__label.configure(text=e.__str__().upper())
+            self.__label.configure(text=e.__str__())
             raise e
 
     def clear_content(self) -> None:
@@ -192,15 +193,15 @@ class AnagramUI (object):
         if len(self.__champText.get()) == 0:
             # self.__champText.configure(command = self.__champText.focus_set)
             self.__label.configure(
-                text="Le champs de lettres est vide.".upper())
+                text=_("Le champs de lettres est vide."))
             return False
         else:
-            if not self.check_vowel() and self.check_letter():
-                self.__label.configure(
-                    text="Absence de voyelle ou présence de caractère non alphabétique.".upper())
-                return False
-            else:
+            if self.check_vowel() and not self.check_letter():
                 return True
+            else:
+                self.__label.configure(
+                    text=_("Absence de voyelle ou présence de caractère non alphabétique."))
+                return False
 
     def display_content(self, liste: List):
         """
@@ -217,12 +218,12 @@ class AnagramUI (object):
         division = len(liste) // column_count
 
         if (len(liste)) == 1:
-            text = " 1 mot a été trouvé"
+            text = _("1 mot a été trouvé")
         else:
-            text = f"{len(liste)} mots ont été trouvé"
+            text = _(f"{len(liste)} mots ont été trouvé")
 
         self.__label.configure(
-            text=text.upper(), justify=tkinter.CENTER, fg="black")
+            text=text, justify=tkinter.CENTER, fg="black")
         self.config_scroll(ligne=division*20.5,
                            colonne=column_count*len(liste[0])*15)
 
@@ -245,15 +246,10 @@ class AnagramUI (object):
         """
         Display about info.
         """
-        about = ("À propos", "Auteur: Muhammed Zeba",
-                 "Email: parice02@hotmail.com", "License: Compatible MIT", "Version: 0.0.2")
-        self.clear_content()
-        pos = 20
-        for a in about:
-            self.__caneva.create_text(
-                250, pos, text=a, fill='green' if pos == 20 else 'black', justify=tkinter.CENTER,
-                font=self.highlightFont if pos == 20 else None)
-            pos += 17
+        about = (_("Auteur: Muhammed Zeba"),
+                 _("Email: parice02@hotmail.com"), _("Licence: Compatible MIT"), _("Version: 0.0.2"))
+        messagebox.showinfo(message=_('À propos'),
+                            title=_('À propos'), detail="\n".join(about))
 
     def config_scroll(self, ligne=0, colonne=0):
         """

@@ -8,7 +8,6 @@ import sqlite3
 from outils import regexp, listfetchall
 from typing import List, Dict
 
-#LANG = {"fr": 'Français', 'en': 'English'}
 
 
 class Anagram (object):
@@ -44,7 +43,8 @@ class Anagram (object):
             results = listfetchall(curseur)
             curseur.close()
             print(results)
-            return results if len(results) != 0 else [0, 'Aucune correspondance trouvée', ]
+            print(params['expr'])
+            return results if len(results) != 0 else [0, _('Aucune correspondance trouvée'), ]
         except Exception as e:
             raise e
             return [0, e.__str__(), ]
