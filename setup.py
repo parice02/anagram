@@ -24,7 +24,7 @@ os.environ['TK_LIBRARY'] = tkl_lib.as_posix()
 
 
 path = sys.path.append(python_env_dir)    # os.path.dirname(sys.executable)
-includes = ['outils']  # inclusion de modules créés sois-même
+includes = ['outils', 'anagram']  # inclusion de modules créés sois-même
 excludes = []  # exclusion de modules créés sois-même
 packages = []  # inclusion de packages créés sois-même
 include_files = ['ana.db']  # inclusion de fichiers essentiels
@@ -53,7 +53,7 @@ else:
     pass
 
 app = Executable(
-    "anagram.py",
+    "tk_ui.py",
     base=base,
     copyright=f"Copyright (c) {date.year}",
     icon="favicon.ico"
