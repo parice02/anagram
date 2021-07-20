@@ -15,6 +15,10 @@ python3 tk_ui.py
 python setup.py build
 ```
 
+# Test
+
+Tested only on Ubuntu 20.04
+
 # Author
 
 Muhammed Zeba

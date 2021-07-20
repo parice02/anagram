@@ -10,7 +10,8 @@ from pathlib import Path
 from cx_Freeze import setup, Executable
 from datetime import date
 
-python_env_dir = Path.cwd() / 'env'  # repertoire où est  installé python
+# repertoire où est  installé python / environnement python
+python_env_dir = Path.cwd() / 'env'
 # Récupération du packages tcl nécessaire le GUI
 tcl_lib = python_env_dir / "tcl" / 'tcl8.6'
 # Récupération du packages tk nécessaire le GUI
@@ -21,23 +22,19 @@ os.environ['TK_LIBRARY'] = tkl_lib.as_posix()
 
 
 # OPTIONS PREPARATION
-
-
 path = sys.path.append(python_env_dir)    # os.path.dirname(sys.executable)
 includes = ['outils', 'anagram']  # inclusion de modules créés sois-même
 excludes = []  # exclusion de modules créés sois-même
-packages = []  # inclusion de packages créés sois-même
-include_files = ['ana.db']  # inclusion de fichiers essentiels
+packages = ['config', 'locales']  # inclusion de packages créés sois-même
+include_files = ['ana.db', 'favicon.png']  # inclusion de fichiers essentiels
 options = {}
 
 
 # TARGET PREPARATION
-
-
 base = None
-tcl86_dll = None
-tk86_dll = None
-binpathincludes = None
+tcl86_dll = Path()
+tk86_dll = Path()
+binpathincludes = []
 if sys.platform == "win32":  # and $$WINCONS$$:
     base = "Win32GUI"
     options["include_msvcr"] = True
@@ -56,7 +53,7 @@ app = Executable(
     "tk_ui.py",
     base=base,
     copyright=f"Copyright (c) {date.year}",
-    icon="favicon.ico"
+    icon="favicon.png"
 )
 
 options['path'] = path
@@ -71,19 +68,17 @@ options['include_files'] = include_files
 
 
 # SETUP PREPARATION
-
-
 long_description = str(
     "Application permettant de retrouver l'ensembles anagrammes d'un ensemble de lettres saisies.")
 
 setup(
     name="MyAnagram",
-    version="0.0.1",
+    version="0.0.2",
     description="application pour trouver des anagrammes",
     long_description=long_description,
-    author="parice02",
+    author="Muhammed Zeba",
     author_email="parice02@hotmail.com",
-    maintainer="parice02",
+    maintainer="Muhammed Zeba",
     maintainer_email="parice02@hotmail.com",
     download_url='',
     license='Libre & Gratuit',

@@ -3,21 +3,21 @@
 '''
 @author: Muhammed Zeba (parice02)
 '''
-import tkinter
+
+from pathlib import Path
 import sqlite3
+import tkinter
+import gettext
+import json
 from tkinter import font, messagebox
 from typing import List
 from collections import Counter
-import gettext
 
 from anagram import Anagram
 
 LANG = {'en': 'English', 'fr': 'Français'}
 HEIGHT, WIDTH = 500, 400
-
-en = gettext.translation(
-    'anagramUI', localedir='locales', languages=['en'], fallback=True)
-en.install()
+CONFIG_FILE = 'config/config.json'
 
 
 class AnagramUI (object):
@@ -27,12 +27,15 @@ class AnagramUI (object):
     def __init__(self):
         """
         """
+        self.config = {}
         self.__letters_dict = {}
         self.__word_length = 0
+        self.__y, self.__x = 17, 0
 
         self.__anagram = Anagram()
 
-        self.__y, self.__x = 17, 0
+        self.check_config()
+        self.load_language()
 
         self.__window = tkinter.Tk()
         # self.__window.tk.call('tk', 'windowingsystem')
@@ -45,8 +48,13 @@ class AnagramUI (object):
         self.__window.iconphoto(True, tkinter.PhotoImage(
             name="icon", file='./favicon.png'))
 
+        self.selected_lang = tkinter.StringVar()
+
         self.highlightFont = font.Font(
             family='Times', name='appHighlightFont', size=15, weight='bold')
+
+        self.textFont = font.Font(
+            family='Times', name='textFont', size=12)
 
         self.__menubar = tkinter.Menu(self.__window)
         self.__window['menu'] = self.__menubar
@@ -59,14 +67,12 @@ class AnagramUI (object):
         self.__menulang = tkinter.Menu(self.__menuedit)
         for k, l in LANG.items():
             self.__menulang.add_radiobutton(
-                label=l, variable=None, value=k,
-                state=tkinter.DISABLED if k == 'en' else tkinter.ACTIVE)
+                label=l, variable=self.selected_lang, value=k, command=self.change_language, state=tkinter.DISABLED if self.config['language']['selected'] == k else tkinter.ACTIVE)
         self.__menuedit.add_cascade(
             label=_('Langue'), menu=self.__menulang)
         self.__menuedit.add_separator()
         self.__menuedit.add_command(
             label=_('À propos de'), command=self.__information)
-        self.__menuedit.add_separator()
         self.__menuedit.add_command(label=_('Aide'), command=None)
 
         self.__frame0 = tkinter.Frame(
@@ -102,12 +108,13 @@ class AnagramUI (object):
         self.__scrolV = tkinter.Scrollbar(
             self.__frame, command=self.__caneva.yview, orient=tkinter.VERTICAL)
         self.__scrolV.pack(side=tkinter.RIGHT, fill=tkinter.Y)
-        self.__caneva.config(yscrollcommand=self.__scrolV.set)
 
         self.__scrolH = tkinter.Scrollbar(
             self.__frame, command=self.__caneva.xview, orient=tkinter.HORIZONTAL)
         self.__scrolH.pack(side=tkinter.BOTTOM, fill=tkinter.X)
-        self.__caneva.config(xscrollcommand=self.__scrolH.set)
+
+        self.__caneva.config(xscrollcommand=self.__scrolH.set,
+                             yscrollcommand=self.__scrolV.set, state=tkinter.NORMAL)
 
         self.__caneva.pack(fill=tkinter.BOTH, side=tkinter.LEFT, expand=True)
 
@@ -117,7 +124,43 @@ class AnagramUI (object):
         self.__champText.bind('<Return>', self.__nombre.focus_set())
         self.__window.bind_all('<Cancel>', self.exit)
 
+        self.__window.grid_columnconfigure(0, weight=1)
+        self.__window.grid_rowconfigure(0, weight=1)
+
         self.__window.mainloop()
+
+    def change_language(self):
+        if self.selected_lang.get() != self.config['language']['selected']:
+            self.config['language']['selected'] = self.selected_lang.get()
+            with open(file=CONFIG_FILE, mode='w', encoding='utf8') as file:
+                json.dump(self.config, file)
+            self.restart_message()
+
+    def check_config(self):
+        config_file = Path(CONFIG_FILE)
+        if config_file.exists() and config_file.is_file():
+            with open(file=CONFIG_FILE, mode='r', encoding='utf8') as file:
+                self.config = json.load(file)
+        else:
+            self.config = {"language": {"default": 'fr', "selected": ""}}
+            config_file.parent.mkdir()
+            config_file.touch()
+            with open(file=CONFIG_FILE, mode='w', encoding='utf8') as file:
+                json.dump(self.config, file)
+
+    def load_language(self):
+        """
+        """
+        if self.config['language']['selected']:
+            lang = gettext.translation(
+                'anagramUI', localedir='locales',
+                languages=[self.config['language']['selected']], fallback=True)
+            lang.install()
+        else:
+            lang = gettext.translation(
+                'anagramUI', localedir='locales',
+                languages=[self.config['language']['default']], fallback=True)
+            lang.install()
 
     def exit(self, event=None):
         """
@@ -235,7 +278,8 @@ class AnagramUI (object):
                 justify=tkinter.LEFT,
                 fill='black',
                 activefill='lightblue',
-                anchor=tkinter.W)
+                anchor=tkinter.W,
+                font=self.textFont)
             self.__y += 20
             if (i == division):
                 i = 0
@@ -250,6 +294,15 @@ class AnagramUI (object):
                  _("Email: parice02@hotmail.com"), _("Licence: Compatible MIT"), _("Version: 0.0.2"))
         messagebox.showinfo(message=_('À propos'),
                             title=_('À propos'), detail="\n".join(about))
+
+    def restart_message(self):
+        """
+        """
+        message = _(
+            "Le changement de langue ne sera effectif qu'après un redémarrage de l'application.")
+        messagebox.showwarning(message=message, title=_(
+            "Redémarrage"), icon='warning')
+        self.exit()
 
     def config_scroll(self, ligne=0, colonne=0):
         """

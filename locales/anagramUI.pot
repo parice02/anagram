@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2021-07-18 11:00+0000\n"
+"POT-Creation-Date: 2021-07-20 00:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,83 +15,95 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: anagram.py:51
+#: anagram.py:47
 msgid "Aucune correspondance trouvée"
 msgstr ""
 
-#: tk_ui.py:39 tk_ui.py:40
+#: tk_ui.py:44 tk_ui.py:45
 msgid "Anagramme"
 msgstr ""
 
-#: tk_ui.py:53
+#: tk_ui.py:63
 msgid "Édition"
 msgstr ""
 
-#: tk_ui.py:55
+#: tk_ui.py:65
 msgid "Quitter"
 msgstr ""
 
-#: tk_ui.py:63
+#: tk_ui.py:72
 msgid "Langue"
 msgstr ""
 
-#: tk_ui.py:66
+#: tk_ui.py:75
 msgid "À propos de"
 msgstr ""
 
-#: tk_ui.py:68
+#: tk_ui.py:77
 msgid "Aide"
 msgstr ""
 
-#: tk_ui.py:74
+#: tk_ui.py:83
 msgid "Entrer les lettres et le nombre de lettres souhaités"
 msgstr ""
 
-#: tk_ui.py:76
+#: tk_ui.py:85
 msgid "Lettres: "
 msgstr ""
 
-#: tk_ui.py:82
+#: tk_ui.py:91
 msgid "Nombre de lettres: "
 msgstr ""
 
-#: tk_ui.py:88
+#: tk_ui.py:97
 msgid "OK"
 msgstr ""
 
-#: tk_ui.py:138
+#: tk_ui.py:184
 msgid "Le nombre doit être au plus égal au nombre de lettres."
 msgstr ""
 
-#: tk_ui.py:150
+#: tk_ui.py:196
 msgid "Veuillez saisir un entier positif svp!!"
 msgstr ""
 
-#: tk_ui.py:194
+#: tk_ui.py:240
 msgid "Le champs de lettres est vide."
 msgstr ""
 
-#: tk_ui.py:201
+#: tk_ui.py:247
 msgid "Absence de voyelle ou présence de caractère non alphabétique."
 msgstr ""
 
-#: tk_ui.py:247
+#: tk_ui.py:265
+msgid "1 mot a été trouvé"
+msgstr ""
+
+#: tk_ui.py:294
 msgid "Auteur: Muhammed Zeba"
 msgstr ""
 
-#: tk_ui.py:248
+#: tk_ui.py:295
 msgid "Email: parice02@hotmail.com"
 msgstr ""
 
-#: tk_ui.py:248
+#: tk_ui.py:295
 msgid "Licence: Compatible MIT"
 msgstr ""
 
-#: tk_ui.py:248
+#: tk_ui.py:295
 msgid "Version: 0.0.2"
 msgstr ""
 
-#: tk_ui.py:249 tk_ui.py:250
+#: tk_ui.py:296 tk_ui.py:297
 msgid "À propos"
+msgstr ""
+
+#: tk_ui.py:302
+msgid "Le changement de langue ne sera effectif qu'après un redémarrage de l'application."
+msgstr ""
+
+#: tk_ui.py:304
+msgid "Redémarrage"
 msgstr ""
 
