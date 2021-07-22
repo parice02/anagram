@@ -1,10 +1,14 @@
 # -*- conding: utf8 -*-
 
-import time
+"""
+@author: Muhammed Zeba (parice02)
+"""
 
 """
 Source: https://saladtomatonion.com/blog/2014/12/16/mesurer-le-temps-dexecution-de-code-en-python/
 """
+
+import time
 
 
 class Timer(object):
@@ -55,4 +59,4 @@ class LoggerTimer(Timer):
         # Call the parent method
         super(LoggerTimer, self).stop()
         # Call the logging function with the message
-        self.f(f"{self.prefix}{self.interval}")
+        self.f(f"{self.prefix}: {self.interval}")
