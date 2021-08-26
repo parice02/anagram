@@ -1,0 +1,121 @@
+# Translations template for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-08-26 22:15+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: tk_ui.py:44 tk_ui.py:45
+msgid "Anagramme"
+msgstr ""
+
+#: tk_ui.py:63
+msgid "Édition"
+msgstr ""
+
+#: tk_ui.py:64
+msgid "Aide"
+msgstr ""
+
+#: tk_ui.py:66
+msgid "Quitter"
+msgstr ""
+
+#: tk_ui.py:79
+msgid "Langue"
+msgstr ""
+
+#: tk_ui.py:82
+msgid "À propos de"
+msgstr ""
+
+#: tk_ui.py:83 tk_ui.py:338
+msgid "Licence"
+msgstr ""
+
+#: tk_ui.py:92
+msgid "Entrer les lettres et le nombre de lettres souhaités"
+msgstr ""
+
+#: tk_ui.py:96
+msgid "Lettres: "
+msgstr ""
+
+#: tk_ui.py:103
+msgid "Nombre de lettres: "
+msgstr ""
+
+#: tk_ui.py:110
+msgid "OK"
+msgstr ""
+
+#: tk_ui.py:198
+msgid "Le nombre doit être au plus égal au nombre de lettres."
+msgstr ""
+
+#: tk_ui.py:214
+msgid "Veuillez saisir un entier positif svp!!"
+msgstr ""
+
+#: tk_ui.py:257
+msgid "Le champs de lettres est vide."
+msgstr ""
+
+#: tk_ui.py:264
+msgid "Absence de voyelle ou présence de caractère non alphabétique."
+msgstr ""
+
+#: tk_ui.py:293
+msgid "mot(s) ont été trouvé."
+msgstr ""
+
+#: tk_ui.py:328
+msgid "Auteur: "
+msgstr ""
+
+#: tk_ui.py:329
+msgid "Email: "
+msgstr ""
+
+#: tk_ui.py:330
+msgid "Licence: MIT"
+msgstr ""
+
+#: tk_ui.py:331
+msgid "Version: "
+msgstr ""
+
+#: tk_ui.py:334
+msgid "À propos"
+msgstr ""
+
+#: tk_ui.py:338
+msgid "Licence M.I.T"
+msgstr ""
+
+#: tk_ui.py:342
+msgid ""
+"Le changement de langue ne sera effectif qu'après un redémarrage de "
+"l'application."
+msgstr ""
+
+#: tk_ui.py:345
+msgid "Redémarrage"
+msgstr ""
+
+#: utility.py:133
+msgid "Aucune correspondance trouvée"
+msgstr ""
+

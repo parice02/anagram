@@ -12,7 +12,7 @@ from typing import List
 from collections import Counter
 
 from anagram import Anagram
-from utility import LoggerTimer, load_config
+from utility import LoggerTimer, load_config, N_
 
 LANG = {"en": "English", "fr": "Français"}
 HEIGHT, WIDTH = 500, 400
@@ -290,7 +290,7 @@ class AnagramUI(object):
             if word_count % column_count == 0
             else word_count // column_count + 1
         )
-        text = _(f"{word_count} mot(s) ont été trouvé.")
+        text = str(word_count) + " " + _("mot(s) ont été trouvé.")
 
         self._label.configure(text=text, justify=tkinter.CENTER, fg="black")
         self.config_scroll(
@@ -325,10 +325,10 @@ class AnagramUI(object):
         Display about info.
         """
         about = (
-            _(f"Auteur: {self.author['name']}"),
-            _(f"Email: {self.author['email']}"),
+            _("Auteur: ") + self.author["name"],
+            _("Email: ") + self.author["email"],
             _("Licence: MIT"),
-            _(f"Version: {self.version}"),
+            _("Version: ") + self.version,
         )
         messagebox.showinfo(
             message=_("À propos"), title=_("À propos"), detail="\n".join(about)

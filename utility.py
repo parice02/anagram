@@ -11,6 +11,8 @@ from typing import List, Dict
 from pathlib import Path
 import json
 
+def N_(s):
+    return s
 
 def regexp(motif: str, item: str) -> bool:
     """retourne True si le motif regex a été satisfait dans l'item
@@ -102,7 +104,7 @@ class LoggerTimer(Timer):
 class DBSQLite3(object):
     """ """
 
-    def __init__(self, sqlite3_db: str = "db.db") -> None:
+    def __init__(self, sqlite3_db: str = "db.db"):
         """ """
         self._connection = sqlite3.connect(sqlite3_db)
         self._connection.create_function("regexp", 2, regexp)
