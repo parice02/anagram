@@ -4,50 +4,8 @@
 @author: Muhammed Zeba (parice02)
 """
 
-import sqlite3
-from outils import regexp, listfetchall
 from typing import List, Dict
-
-from utility import LoggerTimer
-
-
-class DBSQLite3(object):
-    """ """
-
-    def __init__(self, sqlite3_db: str = "ana.db") -> None:
-        """ """
-        self._connection = sqlite3.connect(sqlite3_db)
-        self._connection.create_function("regexp", 2, regexp)
-        self._cursor = self._connection.cursor()
-
-    def close_connection(self):
-        """ """
-        self._connection.close()
-
-    def close_cursor(self):
-        """ """
-        self._cursor.close()
-
-    @LoggerTimer("DBSQLite.execute_query() process time")
-    def execute_query(self, params) -> List:
-        """ """
-        query = "SELECT DISTINCT mot FROM mots WHERE LENGTH(mot) = :len AND regexp(:expr, mot)"
-        try:
-            self._cursor.execute(query, params)
-            results = listfetchall(self._cursor)
-            return (
-                results
-                if len(results) != 0
-                else [
-                    0,
-                    _("Aucune correspondance trouvée"),
-                ]
-            )
-        except Exception as e:
-            return [
-                0,
-                e.__str__(),
-            ]
+from utility import LoggerTimer, DBSQLite3
 
 
 class Anagram(object):

@@ -4,11 +4,46 @@
 @author: Muhammed Zeba (parice02)
 """
 
-"""
-Source: https://saladtomatonion.com/blog/2014/12/16/mesurer-le-temps-dexecution-de-code-en-python/
-"""
-
 import time
+import sqlite3
+from re import compile, I
+from typing import List, Dict
+from pathlib import Path
+import json
+
+
+def regexp(motif: str, item: str) -> bool:
+    """retourne True si le motif regex a été satisfait dans l'item
+    False sinon
+    """
+    pattern = compile(motif, I)
+    return pattern.search(item) is not None
+
+
+def listfetchall(cursor: sqlite3.Cursor) -> List:
+    "Return all rows from a cursor as a list"
+    return [row[0] for row in cursor.fetchall()]
+
+
+def load_config():
+    CONFIG_FILE = "config/config.json"
+
+    config_file = Path(CONFIG_FILE)
+    if config_file.exists() and config_file.is_file():
+        with open(file=CONFIG_FILE, mode="r", encoding="utf8") as file:
+            return json.load(file)
+    else:
+        raise FileNotFoundError
+
+
+def load_license():
+    LICENCE_FILE = "LICENSE"
+    licence_path = Path(LICENCE_FILE)
+    if licence_path.exists() and licence_path.is_file():
+        with open(file=licence_path, mode="r", encoding="utf8") as file:
+            return file.read()
+    else:
+        raise FileNotFoundError
 
 
 class Timer(object):
@@ -35,7 +70,9 @@ class Timer(object):
 
 
 class LoggerTimer(Timer):
-    """ """
+    """
+    Source: https://saladtomatonion.com/blog/2014/12/16/mesurer-le-temps-dexecution-de-code-en-python/
+    """
 
     @staticmethod
     def default_logger(msg):
@@ -60,3 +97,42 @@ class LoggerTimer(Timer):
         super(LoggerTimer, self).stop()
         # Call the logging function with the message
         self.f(f"{self.prefix}: {self.interval}")
+
+
+class DBSQLite3(object):
+    """ """
+
+    def __init__(self, sqlite3_db: str = "db.db") -> None:
+        """ """
+        self._connection = sqlite3.connect(sqlite3_db)
+        self._connection.create_function("regexp", 2, regexp)
+        self._cursor = self._connection.cursor()
+
+    def close_connection(self):
+        """ """
+        self._connection.close()
+
+    def close_cursor(self):
+        """ """
+        self._cursor.close()
+
+    @LoggerTimer("DBSQLite.execute_query() process time")
+    def execute_query(self, params) -> List:
+        """ """
+        query = "SELECT DISTINCT mot FROM mots WHERE LENGTH(mot) = :len AND regexp(:expr, mot)"
+        try:
+            self._cursor.execute(query, params)
+            results = listfetchall(self._cursor)
+            return (
+                results
+                if len(results) != 0
+                else [
+                    0,
+                    _("Aucune correspondance trouvée"),
+                ]
+            )
+        except Exception as e:
+            return [
+                0,
+                e.__str__(),
+            ]

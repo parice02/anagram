@@ -4,20 +4,20 @@
 @author: Muhammed Zeba (parice02)
 """
 
-from pathlib import Path
 import tkinter
-import gettext
+from gettext import translation, gettext as _
 import json
 from tkinter import font, messagebox
 from typing import List
 from collections import Counter
 
 from anagram import Anagram
-from utility import LoggerTimer
+from utility import LoggerTimer, load_config
 
 LANG = {"en": "English", "fr": "Français"}
 HEIGHT, WIDTH = 500, 400
 CONFIG_FILE = "config/config.json"
+_config = load_config()
 
 
 class AnagramUI(object):
@@ -25,14 +25,17 @@ class AnagramUI(object):
 
     def __init__(self):
         """ """
-        self.config = {}
+        self.config = _config["config"]
+        self.version = _config["version"]
+        self.author = _config["author"]
+        # self.licence = load_license()
+
         self._letters_dict = {}
         self._word_length = 0
         self._y, self._x = 17, 0
 
         self._anagram = Anagram()
 
-        self.check_config()
         self.load_language()
 
         self._window = tkinter.Tk()
@@ -55,8 +58,10 @@ class AnagramUI(object):
         self._menubar = tkinter.Menu(self._window)
         self._window["menu"] = self._menubar
         self._menuedit = tkinter.Menu(self._menubar)
+        self._menuhelp = tkinter.Menu(self._menubar)
         self._menuquit = tkinter.Menu(self._menubar)
         self._menubar.add_cascade(menu=self._menuedit, label=_("Édition"))
+        self._menubar.add_cascade(menu=self._menuhelp, label=_("Aide"))
         self._menubar.add_separator()
         self._menubar.add_command(command=self.exit, label=_("Quitter"))
 
@@ -73,8 +78,9 @@ class AnagramUI(object):
             )
         self._menuedit.add_cascade(label=_("Langue"), menu=self._menulang)
         self._menuedit.add_separator()
-        self._menuedit.add_command(label=_("À propos de"), command=self._information)
-        self._menuedit.add_command(label=_("Aide"), command=None)
+
+        self._menuhelp.add_command(label=_("À propos de"), command=self._information)
+        self._menuhelp.add_command(label=_("Licence"), command=self._show_license)
 
         self._frame0 = tkinter.Frame(
             self._window, width=WIDTH, height=100, bg="lightblue"
@@ -94,9 +100,9 @@ class AnagramUI(object):
         self._champText.focus_set()
         self._champText.grid(row=1, column=1, padx=10)
 
-        tkinter.Label(
-            self._frame0, text=_("Nombre de lettres: "), bg="lightblue"
-        ).grid(row=1, column=2, padx=10)
+        tkinter.Label(self._frame0, text=_("Nombre de lettres: "), bg="lightblue").grid(
+            row=1, column=2, padx=10
+        )
         self._nombre = tkinter.Entry(self._frame0, width=8)
         self._nombre.grid(row=1, column=3, padx=10)
 
@@ -153,26 +159,14 @@ class AnagramUI(object):
 
     def change_language(self):
         if self.selected_lang.get() != self.config["language"]["selected"]:
-            self.config["language"]["selected"] = self.selected_lang.get()
+            _config["config"]["language"]["selected"] = self.selected_lang.get()
             with open(file=CONFIG_FILE, mode="w", encoding="utf8") as file:
-                json.dump(self.config, file)
+                json.dump(_config, file)
             self.restart_message()
-
-    def check_config(self):
-        config_file = Path(CONFIG_FILE)
-        if config_file.exists() and config_file.is_file():
-            with open(file=CONFIG_FILE, mode="r", encoding="utf8") as file:
-                self.config = json.load(file)
-        else:
-            self.config = {"language": {"default": "fr", "selected": ""}}
-            config_file.parent.mkdir()
-            config_file.touch()
-            with open(file=CONFIG_FILE, mode="w", encoding="utf8") as file:
-                json.dump(self.config, file)
 
     def load_language(self):
         """ """
-        lang = gettext.translation(
+        lang = translation(
             "anagramUI",
             localedir="locales",
             languages=[
@@ -217,9 +211,7 @@ class AnagramUI(object):
                         else:
                             self.display_content(liste)
             else:
-                self._label.configure(
-                    text=_("Veuillez saisir un entier positif svp!!")
-                )
+                self._label.configure(text=_("Veuillez saisir un entier positif svp!!"))
         except Exception as e:
             self._label.configure(text=e.__str__())
             # raise e
@@ -333,14 +325,17 @@ class AnagramUI(object):
         Display about info.
         """
         about = (
-            _("Auteur: Muhammed Zeba"),
-            _("Email: parice02@hotmail.com"),
+            _(f"Auteur: {self.author['name']}"),
+            _(f"Email: {self.author['email']}"),
             _("Licence: MIT"),
-            _("Version: 0.0.2"),
+            _(f"Version: {self.version}"),
         )
         messagebox.showinfo(
             message=_("À propos"), title=_("À propos"), detail="\n".join(about)
         )
+
+    def _show_license(self):
+        messagebox.showinfo(title=_("Licence"), message=_("Licence M.I.T"))
 
     def restart_message(self):
         """ """
@@ -355,7 +350,3 @@ class AnagramUI(object):
         Configure the scrollbar
         """
         self._caneva.config(scrollregion=(0, 0, colonne, ligne))
-
-
-if __name__ == "__main__":
-    a = AnagramUI()
