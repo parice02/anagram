@@ -2,10 +2,19 @@
 	"config": {
 		"language": {
 			"default": "fr",
-			"selected": "fr"
+			"selected": "fr",
+			"available": {
+				"en": "English",
+				"fr": "Français"
+			}
+		},
+		"window": {
+			"width": 500,
+			"height": 700,
+			"head_width": 300
 		}
 	},
-	"version": "1.0.2",
+	"version": "0.0.2",
 	"author": {
 		"name": "Mohamed Zeba",
 		"email": "parice02@hotmail.com",

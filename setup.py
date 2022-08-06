@@ -10,8 +10,7 @@ from pathlib import Path
 from cx_Freeze import setup, Executable
 from datetime import date
 
-from utility import load_license
-from tk_ui import _config
+from utility import load_license, _config
 
 __version__, __author__ = _config["version"], _config["author"]
 __license__ = load_license()

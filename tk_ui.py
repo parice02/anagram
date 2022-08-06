@@ -12,12 +12,16 @@ from typing import List
 from collections import Counter
 
 from anagram import Anagram
-from utility import LoggerTimer, load_config, N_
+from utility import LoggerTimer, _config
 
-LANG = {"en": "English", "fr": "Français"}
-HEIGHT, WIDTH = 500, 400
+
+LANG = _config["config"]["language"]["available"]
+HEIGHT, WIDTH, HEAD_HEIGHT = (
+    _config["config"]["window"]["height"],
+    _config["config"]["window"]["width"],
+    _config["config"]["window"]["head_width"],
+)
 CONFIG_FILE = "config/config.json"
-_config = load_config()
 
 
 class AnagramUI(object):
@@ -43,7 +47,7 @@ class AnagramUI(object):
         self._window.resizable(False, False)
         self._window.title(_("Anagramme"))
         self._window.wm_title(_("Anagramme"))
-        self._window.minsize(HEIGHT, WIDTH)
+        self._window.minsize(WIDTH, HEIGHT)
         self._window.protocol("WM_DELETE_WINDOW", self._window.destroy)
         self._window.iconphoto(
             True, tkinter.PhotoImage(name="icon", file="./favicon.png")
@@ -83,7 +87,7 @@ class AnagramUI(object):
         self._menuhelp.add_command(label=_("Licence"), command=self._show_license)
 
         self._frame0 = tkinter.Frame(
-            self._window, width=WIDTH, height=100, bg="lightblue"
+            self._window, width=WIDTH, height=HEAD_HEIGHT, bg="lightblue"
         )
         self._frame0.pack(side=tkinter.TOP, expand=True, fill=tkinter.BOTH)
 
@@ -117,12 +121,16 @@ class AnagramUI(object):
         self._frame = tkinter.Frame(
             self._window,
             width=WIDTH,
-            height=400,
+            height=HEIGHT,
         )
         self._frame.pack(side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=True)
 
         self._caneva = tkinter.Canvas(
-            self._frame, width=WIDTH, height=400, bg="white", scrollregion=(0, 0, 0, 0)
+            self._frame,
+            width=WIDTH,
+            height=HEIGHT - HEAD_HEIGHT,
+            bg="white",
+            scrollregion=(0, 0, 0, 0),
         )
 
         self._scrollV = tkinter.Scrollbar(
@@ -206,6 +214,7 @@ class AnagramUI(object):
                         liste = self._anagram.process(
                             self._letters_dict, self._word_length
                         )
+
                         if type(liste[0]) == int and liste[0] == 0:
                             self._label.configure(text=liste[1], fg="blue")
                         else:
@@ -327,7 +336,6 @@ class AnagramUI(object):
         about = (
             _("Auteur: ") + self.author["name"],
             _("Email: ") + self.author["email"],
-            _("Licence: MIT"),
             _("Version: ") + self.version,
         )
         messagebox.showinfo(

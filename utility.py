@@ -7,12 +7,15 @@
 import time
 import sqlite3
 from re import compile, I
-from typing import List, Dict
+from typing import List
 from pathlib import Path
 import json
+from gettext import gettext as _
+
 
 def N_(s):
     return s
+
 
 def regexp(motif: str, item: str) -> bool:
     """retourne True si le motif regex a été satisfait dans l'item
@@ -34,8 +37,7 @@ def load_config():
     if config_file.exists() and config_file.is_file():
         with open(file=CONFIG_FILE, mode="r", encoding="utf8") as file:
             return json.load(file)
-    else:
-        raise FileNotFoundError
+    raise FileNotFoundError
 
 
 def load_license():
@@ -44,8 +46,7 @@ def load_license():
     if licence_path.exists() and licence_path.is_file():
         with open(file=licence_path, mode="r", encoding="utf8") as file:
             return file.read()
-    else:
-        raise FileNotFoundError
+    raise FileNotFoundError
 
 
 class Timer(object):
@@ -138,3 +139,6 @@ class DBSQLite3(object):
                 0,
                 e.__str__(),
             ]
+
+
+_config = load_config()
