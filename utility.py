@@ -25,7 +25,7 @@ def regexp(motif: str, item: str) -> bool:
     return pattern.search(item) is not None
 
 
-def listfetchall(cursor: sqlite3.Cursor) -> List:
+def list_fetchall(cursor: sqlite3.Cursor) -> List:
     "Return all rows from a cursor as a list"
     return [row[0] for row in cursor.fetchall()]
 
@@ -125,7 +125,7 @@ class DBSQLite3(object):
         query = "SELECT DISTINCT mot FROM mots WHERE LENGTH(mot) = :len AND regexp(:expr, mot)"
         try:
             self._cursor.execute(query, params)
-            results = listfetchall(self._cursor)
+            results = list_fetchall(self._cursor)
             return (
                 results
                 if len(results) != 0

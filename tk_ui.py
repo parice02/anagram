@@ -9,7 +9,6 @@ from gettext import translation, gettext as _
 import json
 from tkinter import font, messagebox
 from typing import List
-from collections import Counter
 
 from anagram import Anagram
 from utility import LoggerTimer, _config
@@ -208,17 +207,14 @@ class AnagramUI(object):
                             )
                         )
                     else:
-                        self._letters_dict = dict(
-                            Counter(str(self._champText.get()).lower()).most_common()
-                        )
-                        liste = self._anagram.process(
-                            self._letters_dict, self._word_length
+                        results = self._anagram.process(
+                            str(self._champText.get()).lower(), self._word_length
                         )
 
-                        if type(liste[0]) == int and liste[0] == 0:
-                            self._label.configure(text=liste[1], fg="blue")
+                        if type(results[0]) == int and results[0] == 0:
+                            self._label.configure(text=results[1], fg="blue")
                         else:
-                            self.display_content(liste)
+                            self.display_content(results)
             else:
                 self._label.configure(text=_("Veuillez saisir un entier positif svp!!"))
         except Exception as e:
@@ -358,3 +354,8 @@ class AnagramUI(object):
         Configure the scrollbar
         """
         self._caneva.config(scrollregion=(0, 0, colonne, ligne))
+
+
+if __name__ == "__main__":
+
+    AnagramUI()
